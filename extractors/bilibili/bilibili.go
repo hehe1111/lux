@@ -33,12 +33,16 @@ const referer = "https://www.bilibili.com"
 
 var utoken string
 
+// * 请求 B 站的 token 接口拿到 utoken
+// * 拿到 utoken 后，拼接出视频的下载链接
+// * 示例：https://api.bilibili.com/x/player/playurl?avid=123456789123456&cid=12345678912&bvid=BV...&qn=127&type=&otype=json&fourk=1&fnver=0&fnval=2000&utoken=...
 func genAPI(aid, cid, quality int, bvid string, bangumi bool, cookie string) (string, error) {
 	var (
 		err        error
 		baseAPIURL string
 		params     string
 	)
+	// * 请求 B 站的 token 接口拿到 utoken。utoken 是一个 JSON 字符串，需要反序列化成 token 结构体
 	if cookie != "" && utoken == "" {
 		utoken, err = request.Get(
 			fmt.Sprintf("%said=%d&cid=%d", bilibiliTokenAPI, aid, cid),
@@ -385,6 +389,7 @@ func bilibiliDownload(options bilibiliOptions, extractOption extractors.Options)
 	if err != nil {
 		return extractors.EmptyData(options.url, err)
 	}
+	// * 请求 B 站的视频接口拿到 JSON 字符串，包含视频流、音频流、可选视频清晰度、当前视频清晰度、视频格式等信息
 	jsonString, err := request.Get(api, referer, nil)
 	if err != nil {
 		return extractors.EmptyData(options.url, err)

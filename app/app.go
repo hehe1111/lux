@@ -204,6 +204,7 @@ func New() *cli.App {
 			},
 		},
 		Action: func(c *cli.Context) error {
+			// * lux -i -c "..." https://www.bilibili.com/video/BV.../ 此处的 args 是 []string{"https://www.bilibili.com/video/BV.../"}，不会包含前面的 -i -c "..." 等标志位
 			args := c.Args().Slice()
 
 			if c.Bool("debug") {
@@ -227,8 +228,10 @@ func New() *cli.App {
 
 			cookie := c.String("cookie")
 			if cookie != "" {
+				// * 如果 cookie 是一个文件路径，将其转换为字符串以确保 cookie 始终是字符串
 				// If cookie is a file path, convert it to a string to ensure cookie is always string
 				if _, fileErr := os.Stat(cookie); fileErr == nil {
+					// * os.ReadFile 方法内部就是调用了 f, err := Open(name) + defer f.Close() 方法
 					// Cookie is a file
 					data, err := os.ReadFile(cookie)
 					if err != nil {
@@ -248,6 +251,7 @@ func New() *cli.App {
 			})
 
 			var isErr bool
+			// * 遍历 args 中的每个视频 URL
 			for _, videoURL := range args {
 				if err := download(c, videoURL); err != nil {
 					fmt.Fprintf(

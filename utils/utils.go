@@ -69,6 +69,19 @@ func Domain(url string) string {
 	}
 	return ""
 }
+// * `Domain`函数用于从给定的URL中提取域名（不含顶级域名后缀）。该函数使用正则表达式匹配域名部分，并返回主域名（如"google"、"baidu"等）。
+
+// * 测试用例：
+
+// * 1. `Domain("https://www.google.com/search?q=test")` 返回 `"google"`
+// * 2. `Domain("https://github.org/repository")` 返回 `"github"`
+// * 3. `Domain("http://example.cn/page")` 返回 `"example"`
+// * 4. `Domain("https://example.com.cn/page")` 返回 `"example"`
+// * 5. `Domain("https://sub.domain.com/path")` 返回 `"domain"`
+// * 6. `Domain("https://my-website.com/page")` 返回 `"my-website"`
+// * 7. `Domain("https://invalid.nonexistent/path")` 返回 `""` (空字符串，因为.nonexistent不在支持的顶级域名列表中)
+
+// * 函数只匹配特定的顶级域名(如.com、.org、.cn等)，对于不在列表中的顶级域名将无法提取。
 
 // LimitLength Handle overly long strings
 func LimitLength(s string, length int) string {
